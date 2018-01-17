@@ -23,7 +23,7 @@ function isGet($var) {
 }
 
 function getLoggedInUser() {
-	return $_SESSION['user'];
+	return isset($_SESSION['user']) ? $_SESSION['user'] : null;
 }
 
 function isLoggedIn() {
