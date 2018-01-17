@@ -3,19 +3,19 @@
 <p>
  Page title
  <br>
- <input type="input" name="title" value="{$page_title}">
+ <input type="input" name="title" value="{$data_title}">
 </p>
 
 <h1>Start page</h1>
 <p>
  Title
  <br>
- <input type="input" name="start_title" value="{$page_title}">
+ <input type="input" name="start_title" value="{$data_start_title}">
 </p>
 <p>
  Text
  <br>
- <input type="input" name="start_text" value="{$page_title}">
+ <input type="input" name="start_text" value="{$data_start_text}">
 </p>
 
 <p></p>

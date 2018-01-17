@@ -16,6 +16,13 @@ class Data {
 		return $d;
 	}
 
+	public function set($key, $value) {
+		$key = utf8_decode($key);
+		$value = utf8_decode($value);
+		$sql = "UPDATE data SET data = \"$value\" WHERE title = \"$key\"";
+		$GLOBALS['database']->query($sql);
+	}
+
 }
 
 ?>

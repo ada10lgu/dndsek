@@ -35,4 +35,6 @@ if (isset($_GET['p'])) {
 }
 
 $smarty->display("index.tpl");
+
+
 ?>

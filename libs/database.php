@@ -19,7 +19,7 @@ class Database {
 	}
 
 	public function query($sql) {
-//		echo '<p>query "'.$sql.'"</p>';
+		//echo '<p>query "'.$sql.'"</p>';
 		return $this->conn->query($sql);	
 	}
 
