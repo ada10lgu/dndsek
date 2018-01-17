@@ -1,0 +1,51 @@
+
+div.container {
+    width: 100%;
+    border: 1px solid gray;
+}
+
+header, footer {
+    padding: 1em;
+    color: white;
+    background-color: black;
+    clear: left;
+    text-align: center;
+}
+
+nav {
+    display: flex;
+	flex-wrap: wrap;
+    justify-content: center;
+}
+
+.menuItem {
+   padding: 10px; 
+}
+
+.menuItem:hover {
+background: #eee;
+}
+
+
+article {
+    border-top: 1px solid gray;
+    padding: 1em;
+    overflow: hidden;
+}
+
+.userList {
+	display: flex;
+	justify-content: left;
+	flex-direction: column;
+}
+
+.userItem {
+	border: 1px solid gray;
+	display: flex;
+	flex-direction: row;
+	padding: 10px;
+}
+
+.userItemData {
+	padding: 2px;
+}
