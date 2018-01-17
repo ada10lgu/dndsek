@@ -1,0 +1,1 @@
+<form action="#" method="GET"><input type="text" name="a" /><input type="submit" value=">" /><input type="hidden" name="p" value="{$p}"></form>
