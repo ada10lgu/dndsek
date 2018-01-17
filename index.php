@@ -28,6 +28,9 @@ if (isset($_GET['p'])) {
 		case "settings":
 			include "settings.php";
 			break;
+		case "library":
+			include "library.php";
+			break;
 		default:
 			include "404.php";
 	}	
