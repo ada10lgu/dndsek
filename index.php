@@ -35,7 +35,4 @@ if (isset($_GET['p'])) {
 }
 
 $smarty->display("index.tpl");
-
-$d = $data->getAll();
-echo json_encode($d);
 ?>

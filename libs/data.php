@@ -8,7 +8,9 @@ class Data {
 		$d = array();
 		if ($result->num_rows > 0) {
 			while ($row = $result->fetch_assoc()) {
-				$d[$row['title']] = $row['data'];
+				$title = utf8_encode($row['title']);
+				$data = utf8_encode($row['data']);
+				$d[$title] = $data;
 			}
 		}
 		return $d;
