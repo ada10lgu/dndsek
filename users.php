@@ -1,6 +1,5 @@
 <?php
-if (!isLoggedIn())
-	header("Location: ./");
+verifyAccess();
 
 $list = $users->getUsers();
 

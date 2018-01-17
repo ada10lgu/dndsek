@@ -1,5 +1,4 @@
 <?php
-
 class Data {
 	
 	public function getAll() {
@@ -24,5 +23,4 @@ class Data {
 	}
 
 }
-
 ?>

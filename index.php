@@ -9,6 +9,7 @@ $smarty->caching = false;
 $smarty->assign("page_style","default.css");
 $smarty->assign("loggedIn",isLoggedIn());
 $smarty->assign("page_title","dndsek");
+
 if (isLoggedIn()) {
 	$smarty->assign("self",$self);
 }
@@ -28,13 +29,11 @@ if (isset($_GET['p'])) {
 			include "settings.php";
 			break;
 		default:
-			include "start.php";
+			include "404.php";
 	}	
 } else {
 	include "start.php";
 }
 
 $smarty->display("index.tpl");
-
-
 ?>

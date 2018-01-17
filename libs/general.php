@@ -30,4 +30,9 @@ function isLoggedIn() {
 	return getLoggedInUser() != null;
 }
 
+function verifyAccess() {
+	if (!isLoggedIn())
+		header("Location: ./?p=404");
+}
+
 ?>

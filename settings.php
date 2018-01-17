@@ -1,4 +1,5 @@
 <?php
+verifyAccess();
 
 if (isPost("title","start_title","start_text")) {
     $data->set("title",$_POST['title']);
