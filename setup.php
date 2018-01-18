@@ -1,12 +1,13 @@
 <?php
 $this_file = "setup.php";
 $config_file = "config.php";
-$version = 0.1;
+$version = 0;
 if (!file_exists($config_file)) {
-    $server = "localhost";
-    $user = "dndsek";
-    $pass = "tiamat";
-    $db = "dndsek";
+if (isset($_POST["server"])) {
+    $server = $_POST['server'];
+    $user = $_POST['username'];
+    $pass = $_POST['password'];
+    $db = $_POST['database'];
 
     $config_file_data = <<<PHP
 <?php
@@ -23,17 +24,25 @@ PHP;
 
     header("Location: ./$this_file");
 } else {
-    include $config_file;
-    $config = new Config();
-    
-    if ($config->version < $version) {
-        $link = "./$this_file?update";
-        echo "<p>Using an old config, <a href=\"$link\">update</a>?</p>\n";
-        echo "<p>Config version v$config->version, newest version v$version</p>\n";
-    }
+    print <<<HTML
+<form method="POST" action="#">
+    <p>Server<br>
+    <input type="text" name="server" value="localhost"/></p>
+    <p>Username<br>
+    <input type="text" name="username" value=""/></p>
+    <p>Password<br>
+    <input type="password" name="password" value=""/></p>
+    <p>Database<br>
+    <input type="text" name="database"/></p>
+    <p><input type="submit" value="Save" /></p>
+</form>
+HTML;
 }
 
-
+    
+} else {
+    upgrade($config_file);
+}
 
 function writeToFile($file, $data,$row) {
     $fp = fopen($file, "w") or die("Unable to save config file, see row $row");
@@ -42,5 +51,37 @@ function writeToFile($file, $data,$row) {
 
 }
 
+function createNewConfig($file) {
 
+}
+
+function upgrade($config_file) {
+    include $config_file;
+    include "libs/database.php";
+    $config = new Config();
+    $database = new Database();
+        
+    switch ($config->version) {
+        case 0:
+            e("Making sure database connection is viable...");
+            if ($database->connect($config)) {
+                e("Connection successfull!");
+            } else {
+                e("Could not establish connection, please remove the config file and redo this again");
+                return;
+            }   
+        case 0.1:
+            
+            e("Done!");
+        break;
+        default:
+        e("Illegal version number v$version. Something is strange!");
+    }
+    
+
+}
+
+function e($string) {
+    echo "<p>$string</p>\n";
+}
 ?>
