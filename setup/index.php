@@ -1,15 +1,16 @@
 <?php
-$this_file = "setup.php";
-$config_file = "config.php";
+$this_file = "";
+$config_file = "../libs/config.php";
+
 $version = 0;
 if (!file_exists($config_file)) {
-if (isset($_POST["server"])) {
-    $server = $_POST['server'];
-    $user = $_POST['username'];
-    $pass = $_POST['password'];
-    $db = $_POST['database'];
+    if (isset($_POST["server"])) {
+        $server = $_POST['server'];
+        $user = $_POST['username'];
+        $pass = $_POST['password'];
+        $db = $_POST['database'];
 
-    $config_file_data = <<<PHP
+        $config_file_data = <<<PHP
 <?php
 class Config {
     public \$version = "$version";
@@ -20,11 +21,11 @@ class Config {
 }
 ?>
 PHP;
-    writeToFile($config_file,$config_file_data,__LINE__);
+        writeToFile($config_file,$config_file_data,__LINE__);
 
-    header("Location: ./$this_file");
-} else {
-    print <<<HTML
+        header("Location: ./$this_file");
+    } else {
+        print <<<HTML
 <form method="POST" action="#">
     <p>Server<br>
     <input type="text" name="server" value="localhost"/></p>
@@ -37,7 +38,7 @@ PHP;
     <p><input type="submit" value="Save" /></p>
 </form>
 HTML;
-}
+    }
 
     
 } else {
@@ -57,12 +58,14 @@ function createNewConfig($file) {
 
 function upgrade($config_file) {
     include $config_file;
-    include "libs/database.php";
+    include "../libs/database.php";
     $config = new Config();
     $database = new Database();
         
     switch ($config->version) {
         case 0:
+            echo "<p>\n";
+            h(0);
             e("Making sure database connection is viable...");
             if ($database->connect($config)) {
                 e("Connection successfull!");
@@ -70,18 +73,43 @@ function upgrade($config_file) {
                 e("Could not establish connection, please remove the config file and redo this again");
                 return;
             }   
+            echo "</p>\n";
         case 0.1:
+            echo "<p>\n";
+            h(1);
+            e("Checking database as defined in config");
+            $sql = "SHOW DATABASES like \"$config->database_db\";";
+            $result = $database->query($sql);
+            if (!mysqli_num_rows($result)) {
+                e("Database not found, creating database...");
+                $sql = "CREATE DATABASE $config->database_db";
+                $database->query($sql);
+                e("Database created!");
+            } else {
+                e("Database exists!");
+            }
+
+            e("Checking tables!");
+            echo "</p>\n";
             
             e("Done!");
         break;
         default:
-        e("Illegal version number v$version. Something is strange!");
+            e("Illegal version number v$version. Something is strange!");
+            return;
     }
     
+    return;
+
+
 
 }
 
 function e($string) {
-    echo "<p>$string</p>\n";
+    echo "$string<br />\n";
+}
+
+function h($string) {
+    echo "<b>Version $string</b><br />\n";    
 }
 ?>
