@@ -109,13 +109,34 @@ function upgrade($config_file) {
             }
             echo "</p>\n";
             
+        case "0.2":
+            h("0.2");
+
+
             e("Done!");
         break;
+
         default:
             e("Illegal version number v$version. Something is strange!");
             return;
     }
     
+    $config->version = "0.2";
+        
+    $config_file_data = <<<PHP
+    <?php
+    class Config {
+        public \$version = "$config->version";
+        public \$database_server = "$config->database_server";
+        public \$database_user = "$config->database_user";
+        public \$database_password = "$config->database_password";
+        public \$database_db = "$config->database_db";
+    }
+    ?>
+PHP;
+
+    writeToFile($config_file,$config_file_data,__LINE__);
+
     return;
 
 }
