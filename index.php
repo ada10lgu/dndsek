@@ -8,7 +8,7 @@ $smarty->caching = false;
 
 $smarty->assign("page_style","default.css");
 $smarty->assign("loggedIn",isLoggedIn());
-$smarty->assign("page_title","dndsek");
+$smarty->assign("page_title",$data->getAll()["title"]);
 
 if (isLoggedIn()) {
 	$smarty->assign("self",$self);
