@@ -61,19 +61,20 @@ function upgrade($config_file) {
     include "../libs/database.php";
     $config = new Config();
     $database = new Database();
-        
+
+    echo "<p>\n";
+    echo "<b>Init</b><br />\n";    
+    e("Making sure database connection is viable...");
+    if ($database->connect($config)) {
+        e("Connection successfull!");
+    } else {
+        e("Could not establish connection, please remove the config file and redo this again");
+        return;
+    }   
+    echo "</p>\n";
+
     switch ($config->version) {
         case 0:
-            echo "<p>\n";
-            h(0);
-            e("Making sure database connection is viable...");
-            if ($database->connect($config)) {
-                e("Connection successfull!");
-            } else {
-                e("Could not establish connection, please remove the config file and redo this again");
-                return;
-            }   
-            echo "</p>\n";
         case 0.1:
             echo "<p>\n";
             h("0.1");
@@ -89,53 +90,47 @@ function upgrade($config_file) {
                 e("Database exists!");
             }
 
-            e("Checking tables!");
-            $databases = array("data","users");
-            $i = 1;
-            $c = count($databases);
-            foreach ($databases as $db_file) {
-                e("Table $i/$c");
-                $i++;
-                $sql = "SHOW TABLES FROM $config->database_db LIKE \"$db_file\"";
-                $result = $database->query($sql);               
-                if (mysqli_num_rows($result)) {
-                    e("Already exists");
-                } else {
-                    e("Creating...");
-                    sql($db_file,$database);
-                    e("Created.");
-                }
-              
-            }
+            sqlFiles(array("data","users"),$database,$config);
             echo "</p>\n";
-            
         case "0.2":
+            echo "<p>\n";
             h("0.2");
-
-
+            sqlFiles(array("wiki"),$database,$config);
+            echo "</p>\n";
+        case "0.3":
+            echo "<p>\n";
+            h("0.3");
+            echo "</p>\n";
             e("Done!");
+
+            $config->version = "0.3";
+        
+            $config_file_data = <<<PHP
+            <?php
+            class Config {
+                public \$version = "$config->version";
+                public \$database_server = "$config->database_server";
+                public \$database_user = "$config->database_user";
+                public \$database_password = "$config->database_password";
+                public \$database_db = "$config->database_db";
+            }
+            ?>
+PHP;
+        
+            writeToFile($config_file,$config_file_data,__LINE__);
+
         break;
 
         default:
-            e("Illegal version number v$version. Something is strange!");
-            return;
+            e("Illegal version number v$config->version. Something is strange!");
     }
     
-    $config->version = "0.2";
-        
-    $config_file_data = <<<PHP
-    <?php
-    class Config {
-        public \$version = "$config->version";
-        public \$database_server = "$config->database_server";
-        public \$database_user = "$config->database_user";
-        public \$database_password = "$config->database_password";
-        public \$database_db = "$config->database_db";
-    }
-    ?>
-PHP;
-
-    writeToFile($config_file,$config_file_data,__LINE__);
+    echo "<p>\n";
+    echo "<b>Cleanup</b><br />\n";    
+    e("Closing database...");
+    $database->close();
+    e("Closed!");
+    echo "</p>\n";
 
     return;
 
@@ -147,6 +142,26 @@ function e($string) {
 
 function h($string) {
     echo "<b>Version $string</b><br />\n";    
+}
+
+function sqlFiles($files,$database,$config) {
+    e("Checking tables!");
+    $i = 1;
+    $c = count($files);
+    foreach ($files as $db_file) {
+        e("Table $i/$c");
+        $i++;
+        $sql = "SHOW TABLES FROM $config->database_db LIKE \"$db_file\"";
+        $result = $database->query($sql);               
+        if (mysqli_num_rows($result)) {
+            e("Already exists");
+        } else {
+            e("Creating...");
+            sql($db_file,$database);
+            e("Created.");
+        }
+      
+    }
 }
 
 function sql($file,$database) {
