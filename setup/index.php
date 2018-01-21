@@ -76,7 +76,7 @@ function upgrade($config_file) {
             echo "</p>\n";
         case 0.1:
             echo "<p>\n";
-            h(1);
+            h("0.1");
             e("Checking database as defined in config");
             $sql = "SHOW DATABASES like \"$config->database_db\";";
             $result = $database->query($sql);
@@ -90,6 +90,23 @@ function upgrade($config_file) {
             }
 
             e("Checking tables!");
+            $databases = array("data","users");
+            $i = 1;
+            $c = count($databases);
+            foreach ($databases as $db_file) {
+                e("Table $i/$c");
+                $i++;
+                $sql = "SHOW TABLES FROM $config->database_db LIKE \"$db_file\"";
+                $result = $database->query($sql);               
+                if (mysqli_num_rows($result)) {
+                    e("Already exists");
+                } else {
+                    e("Creating...");
+                    sql($db_file,$database);
+                    e("Created.");
+                }
+              
+            }
             echo "</p>\n";
             
             e("Done!");
@@ -101,8 +118,6 @@ function upgrade($config_file) {
     
     return;
 
-
-
 }
 
 function e($string) {
@@ -111,5 +126,24 @@ function e($string) {
 
 function h($string) {
     echo "<b>Version $string</b><br />\n";    
+}
+
+function sql($file,$database) {
+    $file_full = $file . ".sql";
+    $fp = fopen($file_full, "r") or die("Unable to load database file");
+    $sql = fread($fp,filesize($file_full));
+    fclose($fp);
+
+    $sql = explode(";",$sql);
+    for ($i = 0; $i < count($sql); $i++) {
+        $query = trim($sql[$i]);
+        if (strlen($query) < 5)
+            continue;
+        $database->query($query);
+    }
+    
+
+    
+
 }
 ?>
