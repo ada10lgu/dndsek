@@ -133,7 +133,6 @@ PHP;
     echo "</p>\n";
 
     return;
-
 }
 
 function e($string) {
@@ -177,9 +176,5 @@ function sql($file,$database) {
             continue;
         $database->query($query);
     }
-    
-
-    
-
 }
 ?>

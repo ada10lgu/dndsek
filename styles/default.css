@@ -49,3 +49,41 @@ article {
 .userItemData {
 	padding: 2px;
 }
+
+
+.wikiNewContainer {
+    display: flex;
+}
+
+.wikiNewItem {
+    flex-grow: 1;
+    border: 1px solid coral;
+    background: blue;
+}
+
+
+.outer {
+    display: table;
+    width: 100%;
+  }
+  
+  .inner {
+    display: table-cell;
+    vertical-align: top;
+    background: green;
+    width: 0;
+    
+  }
+  
+  .divider {
+    display: table-cell;
+    width: 10px;
+    background: red;
+    cursor: col-resize;
+  }
+  
+  textarea {
+    width: 100%;
+    resize: vertical;
+    box-sizing: border-box;
+  }

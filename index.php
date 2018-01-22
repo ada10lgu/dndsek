@@ -6,7 +6,9 @@ $smarty = new Smarty();
 
 $smarty->caching = false;
 
-$smarty->assign("page_style","default.css");
+$a = rand(1,1000000);
+
+$smarty->assign("page_style","default.css?$a");
 $smarty->assign("loggedIn",isLoggedIn());
 $smarty->assign("page_title",$data->getAll()["title"]);
 

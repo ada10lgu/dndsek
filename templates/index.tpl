@@ -4,6 +4,8 @@
 <title>{$page_title}</title>
 <link rel="stylesheet" href="styles/{$page_style}">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
 </head>
 <body>
 
@@ -39,5 +41,6 @@
 </div>
 
 </body>
+<script src="script/Splitshot.js"></script>
 </html>
 
