@@ -130,6 +130,8 @@ PHP;
     
     echo "<p>\n";
     echo "<b>Cleanup</b><br />\n";    
+    e("Logging out.");
+    $_SESSION['user'] = null;
     e("Closing database...");
     $database->close();
     e("Closed!");
