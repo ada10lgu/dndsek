@@ -15,7 +15,6 @@ class Wiki {
 
     public function getArticle($a) {
         $sql = "SELECT * FROM wiki WHERE title = '$a' ORDER BY created DESC LIMIT 1";
-        echo $sql;
         $result = $GLOBALS['database']->query($sql);
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
@@ -33,11 +32,16 @@ class Wiki {
             } else {
                 $wikiadmin = "";
             }
+
+            if (!isAdmin() && $old!= null) {
+                $access = $old->access;
+            }
+
         }
         $user = getLoggedInUser();
         $id = $user['id'];
 
-        $sql = "INSERT INTO wiki (created,user,access,title,text,admin_text) VALUES (CURRENT_TIME(),$id,0,'$a','$wiki','$wikiadmin')";
+        $sql = "INSERT INTO wiki (created,user,access,title,text,admin_text) VALUES (CURRENT_TIME(),$id,$access,'$a','$wiki','$wikiadmin')";
         $GLOBALS['database']->query($sql);
         return true;
     }
@@ -49,19 +53,27 @@ class Article {
     public $adminText;
     public $access;
     
-public function __construct($row) {
-    if (is_array($row)) {
-        $this->title = $row['title'];
-        $this->text = $row['text'];
-        $this->adminText = $row['admin_text'];
-        $this->access = $row['access'];
-    } else {
-        $this->title = $row;
-        $this->text = "";
-        $this->adminText = "";
-        $this->access = 0;
+    public function __construct($row) {
+        if (is_array($row)) {
+            $this->title = $row['title'];
+            $this->text = $row['text'];
+            $this->adminText = $row['admin_text'];
+            $this->access = $row['access'];
+        } else {
+            $this->title = $row;
+            $this->text = "";
+            $this->adminText = "";
+            $this->access = 0;
+        }
     }
-}
+
+    public function canEdit() {
+        if ($this->access === 0) {
+            return true;
+        } else {
+            return getLoggedInUser()['admin'];
+        }
+    }
 
 }
 ?>
