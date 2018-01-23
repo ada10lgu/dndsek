@@ -14,8 +14,8 @@ class Wiki {
     }
 
     public function getArticle($a) {
-        $sql = "SELECT * FROM wiki WHERE title = '$a' ORDER BY created DESC LIMIT 1";
-        $result = $GLOBALS['database']->query($sql);
+        $sql = "SELECT * FROM wiki WHERE title = ? ORDER BY created DESC LIMIT 1";
+        $result = $GLOBALS['database']->query($sql,$a);
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             return new Article($row);
@@ -41,8 +41,8 @@ class Wiki {
         $user = getLoggedInUser();
         $id = $user['id'];
 
-        $sql = "INSERT INTO wiki (created,user,access,title,text,admin_text) VALUES (CURRENT_TIME(),$id,$access,'$a','$wiki','$wikiadmin')";
-        $GLOBALS['database']->query($sql);
+        $sql = "INSERT INTO wiki (created,user,access,title,text,admin_text) VALUES (CURRENT_TIME(),?,?,?,?,?)";
+        $GLOBALS['database']->query($sql,$id,$access,$a,$wiki,$wikiadmin);
         return true;
     }
 }
@@ -73,6 +73,14 @@ class Article {
         } else {
             return getLoggedInUser()['admin'];
         }
+    }
+
+    public function render() {
+        return $this->text;
+    }
+
+    public function renderAdmin() {
+        return $this->adminText;
     }
 
 }

@@ -4,8 +4,8 @@ class Users {
 	
 	public function login($username, $password) {
 		$username = trim($username);
-		$sql = "SELECT id, username, email, hash, accepted, admin FROM users WHERE username = '".$username."' AND accepted < CURRENT_TIMESTAMP() LIMIT 1";	
-		$result = $GLOBALS['database']->query($sql);		
+		$sql = "SELECT id, username, email, hash, accepted, admin FROM users WHERE username = ? AND accepted < CURRENT_TIMESTAMP() LIMIT 1";	
+		$result = $GLOBALS['database']->query($sql,$username);		
 		$u = null;
 		if ($result->num_rows > 0) {
 			$row = $result->fetch_assoc();
@@ -36,30 +36,30 @@ class Users {
 		if (!filter_var($email,FILTER_VALIDATE_EMAIL))
 			return "Email is malformed";
 
-		$sql = "SELECT id FROM users WHERE username = '".$username."' LIMIT 1";
-		$result = $GLOBALS['database']->query($sql);
+		$sql = "SELECT id FROM users WHERE username = ? LIMIT 1";
+		$result = $GLOBALS['database']->query($sql,$username);
 		if ($result->num_rows > 0)
 			return "Username is taken";
 
-		$sql = "SELECT id FROM users WHERE email = '".$email."' LIMIT 1";
-		$result = $GLOBALS['database']->query($sql);
+		$sql = "SELECT id FROM users WHERE email = ? LIMIT 1";
+		$result = $GLOBALS['database']->query($sql,$email);
 		if ($result->num_rows > 0)
 			return "Email is used";
 
 		$hash = password_hash($password,PASSWORD_DEFAULT);
-		$sql = "INSERT INTO users(username, hash, email) VALUES ('".$username."','".$hash."','".$email."')";
-		$result = $GLOBALS['database']->query($sql);
+		$sql = "INSERT INTO users(username, hash, email) VALUES (?,?,?)";
+		$result = $GLOBALS['database']->query($sql,$username,$hash,$email);
 	}
 	
 	public function getUsers() {
-		$sql = "SELECT username, email, accepted, admin FROM users ORDER BY username ASC";
+		$sql = "SELECT id, username, email, accepted, admin FROM users ORDER BY username ASC";
 		$result = $GLOBALS['database']->query($sql);
 		
 		$users = array();
 		
 		if ($result->num_rows > 0) {
 			while ($row = $result->fetch_assoc()) {
-				$users[] = new User($row['username'],$row['email'],$row['accepted'],$row['admin']);
+				$users[] = new User($row['id'],$row['username'],$row['email'],$row['accepted'],$row['admin']);
 			}
 
 		}

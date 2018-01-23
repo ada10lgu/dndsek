@@ -70,7 +70,10 @@ function upgrade($config_file) {
     } else {
         e("Could not establish connection, please remove the config file and redo this again");
         return;
-    }   
+    }
+    e("Faking user.");
+    session_start();
+    $_SESSION['user']['admin'] = true;
     echo "</p>\n";
 
     switch ($config->version) {
@@ -79,8 +82,8 @@ function upgrade($config_file) {
             echo "<p>\n";
             h("0.1");
             e("Checking database as defined in config");
-            $sql = "SHOW DATABASES like \"$config->database_db\";";
-            $result = $database->query($sql);
+            $sql = "SHOW DATABASES like ?";
+            $result = $database->query($sql,$config->database_db);
             if (!mysqli_num_rows($result)) {
                 e("Database not found, creating database...");
                 $sql = "CREATE DATABASE $config->database_db";
@@ -150,8 +153,8 @@ function sqlFiles($files,$database,$config) {
     foreach ($files as $db_file) {
         e("Table $i/$c");
         $i++;
-        $sql = "SHOW TABLES FROM $config->database_db LIKE \"$db_file\"";
-        $result = $database->query($sql);               
+        $sql = "SHOW TABLES FROM $config->database_db LIKE ?";
+        $result = $database->query($sql,$db_file);               
         if (mysqli_num_rows($result)) {
             e("Already exists");
         } else {

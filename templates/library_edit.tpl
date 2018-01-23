@@ -14,6 +14,7 @@
 {/if}
 {if $self['admin']}
 <p>
+  Who can edit this article:
   <input type="radio" name="access" value="0" {if $article->access == 0}checked="checked"{/if}> All
   <input type="radio" name="access" value="1" {if $article->access == 1}checked="checked"{/if}> Only GMs
 </p>

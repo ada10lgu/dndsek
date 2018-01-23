@@ -2,7 +2,7 @@
 class Data {
 	
 	public function getAll() {
-		$sql = "SELECT title, data FROM data ORDER BY title ASC";
+		$sql = "SELECT title, data FROM data";
 		$result = $GLOBALS['database']->query($sql);
 		$d = array();
 		if ($result->num_rows > 0) {
@@ -18,8 +18,8 @@ class Data {
 	public function set($key, $value) {
 		$key = utf8_decode($key);
 		$value = utf8_decode($value);
-		$sql = "UPDATE data SET data = \"$value\" WHERE title = \"$key\"";
-		$GLOBALS['database']->query($sql);
+		$sql = "UPDATE data SET data = ? WHERE title = ?";
+		$GLOBALS['database']->query($sql,$value,$key);
 	}
 
 }
