@@ -41,6 +41,5 @@
 </div>
 
 </body>
-<script src="script/Splitshot.js"></script>
 </html>
 

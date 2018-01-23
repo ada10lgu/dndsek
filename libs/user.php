@@ -4,16 +4,17 @@ class Users {
 	
 	public function login($username, $password) {
 		$username = trim($username);
-		$sql = "SELECT username, email, hash, accepted, admin FROM users WHERE username = '".$username."' AND accepted < CURRENT_TIMESTAMP() LIMIT 1";	
+		$sql = "SELECT id, username, email, hash, accepted, admin FROM users WHERE username = '".$username."' AND accepted < CURRENT_TIMESTAMP() LIMIT 1";	
 		$result = $GLOBALS['database']->query($sql);		
 		$u = null;
 		if ($result->num_rows > 0) {
 			$row = $result->fetch_assoc();
 			$hash = $row['hash'];
 			if (password_verify($password,$hash)) {
-				$u = new User($row['username'],$row['email'],$row['accepted'],$row['admin']);
+				$u = new User($row['id'],$row['username'],$row['email'],$row['accepted'],$row['admin']);
 				$_SESSION['user']['username'] = $u->username;
 				$_SESSION['user']['admin'] = (boolean) $u->admin;	
+				$_SESSION['user']['id'] = $u->id;
 			} 		
 		}
 
@@ -69,12 +70,14 @@ class Users {
 }
 
 class User {
+	public $id;
 	public $username;
 	public $email;
 	public $accepted;
 	public $admin;
 
-	function __construct($username, $email,$accepted,$admin) {
+	function __construct($id,$username, $email,$accepted,$admin) {
+		$this->id = $id;
 		$this->username = $username;
 		$this->email = $email;
 		$this->accepted = $accepted;

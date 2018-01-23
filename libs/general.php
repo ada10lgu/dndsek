@@ -30,6 +30,12 @@ function isLoggedIn() {
 	return getLoggedInUser() != null;
 }
 
+function isAdmin($user = false) {
+	if (!$user)
+		return $GLOBALS['self']['admin'];
+	return $user['admin'];
+}
+
 function verifyAccess() {
 	if (!isLoggedIn())
 		header("Location: ./?p=404");

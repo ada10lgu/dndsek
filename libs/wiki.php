@@ -1,7 +1,7 @@
 <?php
 class Wiki {
 
-    public $acceptedChars = "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQERSTUVXYZ1234567890-_()";
+    public $acceptedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQERSTUVWXYZ1234567890-_()";
 
     public function parseSearch($search) {
         $search = str_replace(" ","_",$search);
@@ -14,7 +14,8 @@ class Wiki {
     }
 
     public function getArticle($a) {
-        $sql = "SELECT * FROM wiki WHERE title = '$a'";
+        $sql = "SELECT * FROM wiki WHERE title = '$a' ORDER BY created DESC LIMIT 1";
+        echo $sql;
         $result = $GLOBALS['database']->query($sql);
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
@@ -23,11 +24,43 @@ class Wiki {
             return null;
         }
     }
+
+    public function update($a,$wiki,$wikiadmin,$access){
+        if (!isAdmin()) {
+            $old = $this->getArticle($a);
+            if ($old != null) {
+                $wikiadmin = $old->adminText;
+            } else {
+                $wikiadmin = "";
+            }
+        }
+        $user = getLoggedInUser();
+        $id = $user['id'];
+
+        $sql = "INSERT INTO wiki (created,user,access,title,text,admin_text) VALUES (CURRENT_TIME(),$id,0,'$a','$wiki','$wikiadmin')";
+        $GLOBALS['database']->query($sql);
+        return true;
+    }
 }
 class Article {
 
+    public $title;
+    public $text;
+    public $adminText;
+    public $access;
+    
 public function __construct($row) {
-    echo json_encode($row);
+    if (is_array($row)) {
+        $this->title = $row['title'];
+        $this->text = $row['text'];
+        $this->adminText = $row['admin_text'];
+        $this->access = $row['access'];
+    } else {
+        $this->title = $row;
+        $this->text = "";
+        $this->adminText = "";
+        $this->access = 0;
+    }
 }
 
 }
