@@ -76,11 +76,40 @@ class Article {
     }
 
     public function render() {
-        return $this->text;
+        return $this->renderText($this->text);
     }
 
     public function renderAdmin() {
-        return $this->adminText;
+        return $this->renderText($this->adminText);
+    }
+
+    private function renderText($text) {
+         //Fixes the headers
+         $text = preg_replace("/======\\s+(.+?)\\s+======/i","<h6>$1</h6>",$text);
+         $text = preg_replace("/=====\\s+(.+?)\\s+=====/i","<h5>$1</h5>",$text);
+         $text = preg_replace("/====\\s+(.+?)\\s+====/i","<h4>$1</h4>",$text);
+         $text = preg_replace("/===\\s+(.+?)\\s+===/i","<h3>$1</h3>",$text);
+         $text = preg_replace("/==\\s+(.+?)\\s+==/i","<h2>$1</h2>",$text);
+         $text = preg_replace("/=\\s+(.+?)\\s+=/i","<h1>$1</h1>",$text);
+ 
+         // Horizontal line
+         $text = preg_replace("/----/i","<hr />",$text);
+ 
+         // Fixes newlines
+         $text = preg_replace('~\R~u', "\n", $text);
+         $text = preg_replace("/\n\n/i","<br />\n",$text);
+ 
+         // Some text formating
+         $text = preg_replace("/'''(.*?)'''/i","<b>$1</b>",$text);
+         $text = preg_replace("/''(.*?)''/i","<i>$1</i>",$text);
+         
+         // Links
+         //$text = preg_replace("/\\[\\[(.*?)\\|(.*?)\\]\\]/i","<a href=\"./?p=library&a=$1\">$2</a>",$text);
+         $text = preg_replace("/\\[\\[http:\\/\\/(.*?)\\]\\]/i","<a target=\"_blank\" href=\"http:\\/\\/$1\">$1</a>",$text);
+         $text = preg_replace("/\\[\\[https:\\/\\/(.*?)\\]\\]/i","<a target=\"_blank\" href=\"https:\\/\\/$1\">$1</a>",$text);
+         $text = preg_replace("/\\[\\[(.*?)\\]\\]/i","<a href=\"./?p=library&a=$1\">$1</a>",$text);
+ 
+         return $text;
     }
 
 }
