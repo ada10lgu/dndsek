@@ -14,5 +14,6 @@
 {$article->render()}
 {/if}
 {if $edit}
+<hr />
 <p><a href="./?p=library&a={$article->title}&edit">Edit</a></p>
 {/if}
