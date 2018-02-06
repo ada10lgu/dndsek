@@ -44,7 +44,10 @@ function pressed(e) {
 
 function released(e) {
     m = false;
-    if (e.x >=10 && e.x <= 95 && e.y >= 10 && e.y <= 30) {
+    var x = e.x + c.clientLeft;
+    var y = e.y + c.clientTop;
+    
+    if (x >=10 && x <= 95 && y >= 10 && y <= 30) {
         centerX = c.width/2;
         centerY = c.height/2;
         draw();
@@ -61,14 +64,26 @@ function draw() {
     var h = Math.sqrt(3)/2 * w;
 
     ctx.beginPath();
-    ctx.moveTo(centerX - w/2,centerY);
-    ctx.lineTo(centerX - w/4,centerY - h/2);
-    ctx.lineTo(centerX + w/4,centerY - h/2);
-    ctx.lineTo(centerX + w/2,centerY);
-    ctx.lineTo(centerX + w/4,centerY + h/2);
-    ctx.lineTo(centerX - w/4,centerY + h/2);
-    ctx.lineTo(centerX - w/2,centerY);   
+    for (x = -3; x < 3; x++) { 
+        for (y = -3; y < 3; y++) { 
+            a = centerX + x*3/4*w;
+            b = centerY + y*h + Math.abs(x)%2 * 1/2*h;
+
+
+            ctx.moveTo(a - w/2,b);
+            ctx.lineTo(a - w/4,b - h/2);
+            ctx.lineTo(a + w/4,b - h/2);
+            ctx.lineTo(a + w/2,b);
+            ctx.lineTo(a + w/4,b + h/2);
+            ctx.lineTo(a - w/4,b + h/2);
+            ctx.lineTo(a - w/2,b);           
+        }
+    }
     ctx.stroke();
+
+    
+    
+    
 
     ctx.clearRect(10, 10, 85, 20);
     ctx.strokeRect(10,10,85,20 );
