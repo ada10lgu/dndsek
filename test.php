@@ -112,7 +112,11 @@ function draw() {
         ctx.clearRect(xx,yy,ww,hh);
         ctx.strokeRect(xx,yy,ww,hh);
         ctx.font = "12px Arial";
-        ctx.fillText("x: " + (mouseX-centerX) + " y: " + (mouseY-centerY),xx+2,yy+hh-5);
+
+        hexX = Math.round((mouseX - centerX)/(3/4*w));
+        hexY = Math.round((centerY - mouseY)/(h)+Math.abs(hexX%2)/2);
+
+        ctx.fillText("x: " + hexX + " y: " + hexY,xx+2,yy+hh-5);
     }
     
 
