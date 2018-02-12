@@ -5,7 +5,7 @@
 </head>
 <body>
 <br/>
-fsdfsdfsddfds<canvas id="myCanvas" width="800" height="300" style="border:1px solid #000000;">
+fsdfsdfsddfdsö<canvas id="myCanvas" width="800" height="300" style="border:1px solid #000000;">
 </canvas>
 
 <script>
@@ -25,10 +25,10 @@ var height = 5;
 var mouseX = 0;
 var mouseY = 0;
 
-c.addEventListener("mousemove", moving,false);
-c.addEventListener("mouseup", released,false);
-c.addEventListener("mouseout",released,false   );
-c.addEventListener("mousedown",pressed ,false);
+addEventListener("mousemove",   moving,false);
+addEventListener("mouseup",     released,false);
+addEventListener("mouseout",    released,false);
+c.addEventListener("mousedown", pressed ,false);
 
 draw(0,0);
 function moving(e) {
